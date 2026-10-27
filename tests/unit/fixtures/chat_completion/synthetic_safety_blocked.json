@@ -1,0 +1,28 @@
+{
+  "trajectory_id": "synthetic_safety",
+  "call_idx": 0,
+  "ts": "2026-07-12T00:00:02Z",
+  "status": "ok",
+  "duration_s": 0.5,
+  "request": {
+    "contents": [{"role": "user", "parts": [{"text": "<blocked>"}]}]
+  },
+  "response": [
+    {
+      "prompt": {},
+      "completion": {
+        "role": "model",
+        "parts": []
+      },
+      "completion_text": "",
+      "finishReason": "SAFETY",
+      "extras": {
+        "usageMetadata": {
+          "promptTokenCount": 5,
+          "candidatesTokenCount": 0,
+          "totalTokenCount": 5
+        }
+      }
+    }
+  ]
+}

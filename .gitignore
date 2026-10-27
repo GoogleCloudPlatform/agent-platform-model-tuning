@@ -1,0 +1,30 @@
+logs/
+logs*/
+*.pyc
+__pycache__/
+scratch/
+*logs.txt
+.venv/
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Per-developer scratch directories: worktree checkouts and local
+# tooling state. Not intended to be shared.
+/.worktree/
+
+.agent/
+.canvas/
+
+# beside the results JSONL, which is the repo root for a local run.
+/run_info.json
+
+# Local eval/recording outputs -- never checked in. `logs/` was already
+# ignored; these siblings are written by ATIF disk writes and the backend
+# response recorders and had no rule, so they showed up as untracked noise.
+atif/
+gemini-*-flash/
+gemini-*-pro/
+
+# fcntl lock files created by search_cache/cache_sync at runtime
+*.jsonl.lock

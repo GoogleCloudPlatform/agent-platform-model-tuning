@@ -1,0 +1,29 @@
+{
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "**/__pycache__",
+    ".venv",
+    ".pytype",
+    ".ruff_cache",
+    ".worktree",
+    ".agent",
+    "logs",
+    "logs*",
+    "scratch"
+  ],
+  "extraPaths": [
+    "src",
+    "."
+  ],
+  "pythonVersion": "3.12",
+  "typeCheckingMode": "basic",
+  "reportMissingParameterType": "error",
+  "reportMissingTypeArgument": "error",
+  "reportUnknownParameterType": "warning",
+  "reportUnknownMemberType": "none",
+  "reportUnknownVariableType": "none",
+  "reportMissingImports": "warning",
+  "reportMissingTypeStubs": "none"
+}

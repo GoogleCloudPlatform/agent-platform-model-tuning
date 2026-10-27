@@ -1,0 +1,29 @@
+{
+  "trajectory_id": "synthetic_max_tokens",
+  "call_idx": 0,
+  "ts": "2026-07-12T00:00:01Z",
+  "status": "ok",
+  "duration_s": 0.5,
+  "request": {
+    "contents": [{"role": "user", "parts": [{"text": "Write a novel."}]}],
+    "generation_config": {"maxOutputTokens": 8}
+  },
+  "response": [
+    {
+      "prompt": {},
+      "completion": {
+        "role": "model",
+        "parts": [{"text": "Chapter 1. It was a dark and"}]
+      },
+      "completion_text": "Chapter 1. It was a dark and",
+      "finishReason": "MAX_TOKENS",
+      "extras": {
+        "usageMetadata": {
+          "promptTokenCount": 4,
+          "candidatesTokenCount": 8,
+          "totalTokenCount": 12
+        }
+      }
+    }
+  ]
+}

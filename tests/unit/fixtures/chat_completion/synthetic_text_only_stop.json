@@ -1,0 +1,28 @@
+{
+  "trajectory_id": "synthetic_text_only",
+  "call_idx": 0,
+  "ts": "2026-07-12T00:00:00Z",
+  "status": "ok",
+  "duration_s": 0.5,
+  "request": {
+    "contents": [{"role": "user", "parts": [{"text": "Say hi."}]}]
+  },
+  "response": [
+    {
+      "prompt": {},
+      "completion": {
+        "role": "model",
+        "parts": [{"text": "Hi there!"}]
+      },
+      "completion_text": "Hi there!",
+      "finishReason": "STOP",
+      "extras": {
+        "usageMetadata": {
+          "promptTokenCount": 3,
+          "candidatesTokenCount": 3,
+          "totalTokenCount": 6
+        }
+      }
+    }
+  ]
+}

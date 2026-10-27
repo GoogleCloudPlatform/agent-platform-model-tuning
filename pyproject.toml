@@ -1,0 +1,147 @@
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+[project]
+name = "agent-platform-model-tuning"
+version = "0.1.0"
+description = "Client library and example recipes for multi-step reinforcement learning (MSRL) tuning of Gemini models on Vertex AI."
+readme = "README.md"
+license = "Apache-2.0"
+authors = [{ name = "Google LLC" }]
+requires-python = ">=3.12"
+dependencies = [
+    "chz>=0.4.0",
+    "google-api-core>=2.17.0",
+    "google-auth>=2.49.1",
+    "google-cloud-aiplatform>=1.71.0",
+    "google-cloud-storage>=2.14.0",
+    "harbor>=0.18.0",
+    # httpx[http2] pulls in h2/hpack/hyperframe: `http_utils.build_http_client`
+    # defaults to http2=True and is used by the vertex backends.
+    "httpx[http2]>=0.28.1",
+    "numpy>=2.4.4",
+    "requests>=2.33.1",
+    "rich>=14.3.3",
+]
+
+[project.urls]
+Homepage = "https://github.com/GoogleCloudPlatform/agent-platform-model-tuning"
+Repository = "https://github.com/GoogleCloudPlatform/agent-platform-model-tuning"
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "pytest-cov>=5.0",
+]
+# Vertex AI Experiments logger backend for ml_log.py.
+# Only needed when passing setup_logging(..., vertex_experiment=<name>);
+# base install and the Vertex tuning backend do NOT need this.
+#
+# pyopenssl<26 pin: pyopenssl 26.x has an SSL context-reuse bug that
+# breaks google-cloud-storage requests with
+# "Context has already been used to create a Connection, it cannot be
+# mutated again". Pinning to 25.x fixes it. Applies to any HTTPS call
+# through requests+google-auth (which google-cloud-storage uses for
+# GCS reads under tools/backfill_metrics_to_vertex.py).
+vertex_logger = [
+    "pyopenssl<26",
+]
+# Weights & Biases logger backend for utils/logger.py.
+# Only needed when passing setup_logging(..., wandb_project=<name>);
+# base install does NOT need this. Offline by default (no network).
+wandb_logger = [
+    "wandb>=0.17",
+]
+# Word_puzzle agent solver (src/example_recipe/word_puzzle/agent_solver/).
+# Only needed to RUN the mini-swe-agent-based word_puzzle solver
+# (`run_agent_solver.py` + related modules). The RL training pipeline
+# does NOT need this -- both live in the same recipe directory but
+# only the agent_solver code imports `minisweagent`.
+#
+# Base mini-swe-agent pulls a substantial transitive stack (litellm,
+# textual, huggingface datasets, openai, pydantic v2). Kept out of the
+# base install to avoid inflicting those on RL-training-only users.
+# Tests that exercise the agent_solver code
+# (test_sampler_chat_completion_model.py,
+# test_async_default_agent_bash_cap.py,
+# test_async_default_agent_execute_actions.py) are guarded by
+# `pytest.importorskip("minisweagent")` so they SKIP cleanly when this
+# extra isn't installed rather than failing test collection.
+#
+# Install: `uv sync --extra agent_solver` (add alongside --extra test /
+# --extra dev as needed).
+agent_solver = [
+    "mini-swe-agent>=2.4.5",
+]
+# Developer tools: optional type-checking / profiling.
+# Not required for running training or tests.
+dev = [
+    "pyright>=1.1.380",
+    "pytype>=2024.10.11",
+    "py-spy>=0.4.1",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+# src-layout: make `pipeline`, `core`, `backends`, `utils`,
+# `example_recipe` importable as top-level packages without an
+# editable install. `core` holds the shared domain model (Trajectory,
+# Env/Sampler/Trainer protocols, metrics, recipe Config bases) that
+# `pipeline`, `backends`, and every recipe depend on; it lives at
+# the top level (not under pipeline) because eval and non-training
+# consumers also need it. `example_recipe` is a PEP 420 namespace
+# package rooted at `src/`. The bare `.` keeps
+# the repo root on sys.path for the pre-refactor flat-import tests
+# that haven't been migrated yet (see conftest.py).
+pythonpath = ["src", "."]
+norecursedirs = [
+    ".venv",
+    ".git",
+    ".pytype",
+    ".ruff_cache",
+    "logs*",
+    "scratch",
+    "__pycache__",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+markers = [
+    "integration: end-to-end training-loop tests with HTTP-mocked transports (none currently shipped; add new ones under tests/integration/)",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["."]
+omit = [
+    "*/tests/*",
+    "conftest.py",
+    ".venv/*",
+    "logs*/*",
+    "scratch/*",
+    "tools/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
