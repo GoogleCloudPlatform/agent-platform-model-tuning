@@ -61,7 +61,7 @@ pluggy==1.6.0
 proto-plus==1.27.2
 protobuf==6.33.6
 py-spy==0.4.1
-pyasn1==0.6.3
+pyasn1==0.6.5
 pyasn1_modules==0.4.2
 pycnite==2024.7.31
 pycparser==3.0
